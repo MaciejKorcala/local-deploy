@@ -1,0 +1,26 @@
+version: '3.5'
+
+services:
+
+  rabbit:
+    container_name: rabbit
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - exchange
+
+  db:
+    container_name: db
+    image: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: rates_db
+    ports:
+      - "3306:3306"
+    networks:
+      - exchange
+
+networks:
+  exchange:
