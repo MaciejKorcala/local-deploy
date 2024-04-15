@@ -23,7 +23,7 @@ services:
 
   currency-provider:
     container_name: currency-provider
-    build: ../zajęcia 30/currency-provider
+    build: ../currency-provider
     environment:
       RABBIT_ADDRESSES: rabbit:5672
       RABBIT_USERNAME: guest
@@ -36,15 +36,15 @@ services:
     networks:
       - exchange
 
-  currency-persistance-service:
-    container_name: currency-persistance-service
-    build: ../zajecia 31
+  currency-persistence-service:
+    container_name: currency-persistence-service
+    build: ../currency-persistence-service
     environment:
       RABBIT_ADDRESSES: rabbit:5672
       RABBIT_USERNAME: guest
       RABBIT_PASSWORD: guest
       RABBIT_RATES_QUEUE_NAME: rates
-      DATABASE_URL: localhost:3306/rates_db
+      DATABASE_URL: db:3306/rates_db
       DATABASE_USERNAME: root
       DATABASE_PASSWORD: root
     depends_on:
@@ -54,5 +54,44 @@ services:
       - "8082:8082"
     networks:
       - exchange
+
+  currency-api:
+    container_name: currency-api
+    build: ../currency-api
+    environment:
+      RABBIT_ADDRESSES: rabbit:5672
+      RABBIT_USERNAME: guest
+      RABBIT_PASSWORD: guest
+      RABBIT_NOTIFICATION_QUEUE_NAME: notification_queue
+      DATABASE_URL: db:3306/rates_db
+      DATABASE_USERNAME: root
+      DATABASE_PASSWORD: root
+    depends_on:
+      - rabbit
+      - db
+    ports:
+      - "8083:8083"
+    networks:
+      - exchange
+
+  email-service:
+    container_name: email-service
+    build: ../email-service
+    environment:
+      RABBIT_ADDRESSES: rabbit:5672
+      RABBIT_USERNAME: guest
+      RABBIT_PASSWORD: guest
+      RABBIT_NOTIFICATION_QUEUE_NAME: notification_queue
+      MAIL_HOST_NAME: smtp.gmail.com
+      MAIL_PORT: 587
+      MAIL_USERNAME: spamkonto018@gmail.com
+      MAIL_PASSWORD: "mokf gobw qhcm sbav"
+    depends_on:
+      - rabbit
+    ports:
+      - "8084:8084"
+    networks:
+      - exchange
+
 networks:
   exchange:
