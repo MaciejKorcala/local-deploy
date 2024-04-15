@@ -1,7 +1,6 @@
 version: '3.5'
 
 services:
-
   rabbit:
     container_name: rabbit
     image: rabbitmq:3-management
@@ -22,5 +21,38 @@ services:
     networks:
       - exchange
 
+  currency-provider:
+    container_name: currency-provider
+    build: ../zajęcia 30/currency-provider
+    environment:
+      RABBIT_ADDRESSES: rabbit:5672
+      RABBIT_USERNAME: guest
+      RABBIT_PASSWORD: guest
+      RABBIT_RATES_QUEUE_NAME: rates
+    depends_on:
+      - rabbit
+    ports:
+      - "8081:8081"
+    networks:
+      - exchange
+
+  currency-persistance-service:
+    container_name: currency-persistance-service
+    build: ../zajecia 31
+    environment:
+      RABBIT_ADDRESSES: rabbit:5672
+      RABBIT_USERNAME: guest
+      RABBIT_PASSWORD: guest
+      RABBIT_RATES_QUEUE_NAME: rates
+      DATABASE_URL: localhost:3306/rates_db
+      DATABASE_USERNAME: root
+      DATABASE_PASSWORD: root
+    depends_on:
+      - rabbit
+      - db
+    ports:
+      - "8082:8082"
+    networks:
+      - exchange
 networks:
   exchange:
