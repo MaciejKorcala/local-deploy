@@ -56,7 +56,7 @@ services:
       RABBIT_ADDRESSES: rabbit:5672
       RABBIT_USERNAME: guest
       RABBIT_PASSWORD: guest
-      RABBIT_RATES_QUEUE_NAME: rates
+#      RABBIT_RATES_QUEUE_NAME: rates
       DATABASE_URL: db:3306/rates_db
       DATABASE_USERNAME: root
       DATABASE_PASSWORD: root
@@ -69,8 +69,8 @@ services:
       - exchange
 
   currency-api:
-    container_name: currency-api
-    build: ../currency-api
+    container_name: exchange-api
+    build: ../exchange-api
     environment:
       RABBIT_ADDRESSES: rabbit:5672
       RABBIT_USERNAME: guest
