@@ -27,8 +27,6 @@ services:
     environment:
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
-      KC_HOSTNAME: localhost
-      KC_HOSTNAME_PORT: 18080
     command:
       - start-dev
     ports:
@@ -81,6 +79,8 @@ services:
       DATABASE_URL: db:3306/rates_db
       DATABASE_USERNAME: root
       DATABASE_PASSWORD: root
+      KEYCLOAK_ISSUER_URI: http://keycloak:8080/realms/CurrencyKeycloak
+      KEYCLOAK_JWK_SET_URI: http://keycloak:8080/realms/CurrencyKeycloak/protocol/openid-connect/certs
     depends_on:
       - rabbit
       - db
